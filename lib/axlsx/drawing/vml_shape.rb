@@ -24,6 +24,7 @@ module Axlsx
       @right_offset = 50
       @bottom_offset = 5
       @visible = true
+      @fill_image = nil
       @id = (0...8).map{65.+(rand(25)).chr}.join
       parse_options options
       yield self if block_given?
@@ -40,7 +41,9 @@ module Axlsx
     # @param [String] str
     # @return [String]
     def to_xml_string(str ='')
+
       puts @fill_image
+      puts @fill_image.name
       str = ""
 
       str << "<v:shape id=\"#{@id}\" type=\"#_x0000_t202\" fillcolor=\"#ffffa1 [80]\" o:insetmode=\"auto\" style=\"visibility:#{@visible ? 'visible' : 'hidden'}\">"
