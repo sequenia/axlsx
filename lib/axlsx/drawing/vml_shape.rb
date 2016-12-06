@@ -41,35 +41,28 @@ module Axlsx
     # @return [String]
     def to_xml_string(str ='')
       puts @fill_image
-      # tag = nil
-      # if @fill_image.nil?
-      #   tag = <v:fill color2="#ffffa1 [80]" />
-      # else
-      #   tag = <v:fill o:relid=@fill_image.Id o:title=@fill_image.name color2="#ffffe1" recolor="t" rotate="t" type="frame"/>
-      # end
-str << <<SHAME_ON_YOU
+      str = ""
 
-<v:shape id="#{@id}" type="#_x0000_t202" fillcolor="#ffffa1 [80]" o:insetmode="auto"
-  style="visibility:#{@visible ? 'visible' : 'hidden'}">
-  <v:fill color2="#ffffa1 [80]"/>
-  <v:shadow on="t" obscured="t"/>
-  <v:path o:connecttype="none"/>
-  <v:textbox style='mso-fit-text-with-word-wrap:t'>
-   <div style='text-align:left'></div>
-  </v:textbox>
+      str << "<v:shape id=\"#{@id}\" type=\"#_x0000_t202\" fillcolor=\"#ffffa1 [80]\" o:insetmode=\"auto\" style=\"visibility:#{@visible ? 'visible' : 'hidden'}\">"
+      str << @fill_image.nil? ? "<v:fill color2=\"#ffffa1 [80]\"/>" : "<v:fill o:relid=\"#{@fill_image.Id}\" o:title=\"#{@fill_image.name}\" color2=\"#ffffe1\" recolor=\"t\" rotate=\"t\" type=\"frame\"/>"
+      str << "<v:shadow on=\"t\" obscured=\"t\"/>"
+      str << "<v:path o:connecttype=\"none\"/>"
+      str << "<v:textbox style='mso-fit-text-with-word-wrap:t'>"
+      str << "<div style='text-align:left'></div>"
+      str << "</v:textbox>"
 
-  <x:ClientData ObjectType="Note">
-   <x:MoveWithCells/>
-   <x:SizeWithCells/>
-   <x:Anchor>#{left_column}, #{left_offset}, #{top_row}, #{top_offset}, #{right_column}, #{right_offset}, #{bottom_row}, #{bottom_offset}</x:Anchor>
-   <x:AutoFill>False</x:AutoFill>
-   <x:Row>#{row}</x:Row>
-   <x:Column>#{column}</x:Column>
-   #{@visible ? '<x:Visible/>' : ''}
-  </x:ClientData>
- </v:shape>
-SHAME_ON_YOU
+      str << "<x:ClientData ObjectType=\"Note\">"
+      str << "<x:MoveWithCells/>"
+      str << "<x:SizeWithCells/>"
+      str << "<x:Anchor>#{left_column}, #{left_offset}, #{top_row}, #{top_offset}, #{right_column}, #{right_offset}, #{bottom_row}, #{bottom_offset}</x:Anchor>"
+      str << "<x:AutoFill>False</x:AutoFill>"
+      str << "<x:Row>#{row}</x:Row>"
+      str << "<x:Column>#{column}</x:Column>"
+      str << "#{@visible ? '<x:Visible/>' : ''}"
+      str << "</x:ClientData>"
+      str << "</v:shape>"
 
+      str
     end
   end
 end
