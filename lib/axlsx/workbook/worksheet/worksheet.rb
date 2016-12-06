@@ -519,8 +519,8 @@ module Axlsx
     end
 
     # Shortcut to worsksheet_comments#add_comment
-    def add_comment(options={})
-      worksheet_comments.add_comment(options)
+    def add_comment(options={}, pic_path = "")
+      worksheet_comments.add_comment(options, pic_path)
     end
 
     # Adds a media item to the worksheets drawing

@@ -38,11 +38,11 @@ module Axlsx
     # @option options [String] author The name of the author for this comment
     # @option options [String] text The text for this comment
     # @option options [Stirng|Cell] ref The cell that this comment is attached to.
-    def add_comment(options={})
+    def add_comment(options={}, pic_path = "")
       raise ArgumentError, "Comment require an author" unless options[:author]
       raise ArgumentError, "Comment requires text" unless options[:text]
       raise ArgumentError, "Comment requires ref" unless options[:ref]
-      self << Comment.new(self, options)
+      self << Comment.new(self, options, pic_path)
       yield last if block_given?
       last
     end

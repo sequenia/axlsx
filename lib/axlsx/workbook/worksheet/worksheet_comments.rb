@@ -22,8 +22,8 @@ module Axlsx
     # Adds a comment
     # @param [Hash] options
     # @see Comments#add_comment
-    def add_comment(options={})
-      comments.add_comment(options)
+    def add_comment(options={}, pic_path = "")
+      comments.add_comment(options, pic_path)
     end 
 
     # The relationships defined by this objects comments collection

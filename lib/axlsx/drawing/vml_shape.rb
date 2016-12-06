@@ -34,10 +34,18 @@ module Axlsx
 
     boolean_attr_accessor :visible
 
+    attr_accessor :fill_image
+
     # serialize the shape to a string
     # @param [String] str
     # @return [String]
     def to_xml_string(str ='')
+      tag = nil
+      if @fill_image.nil?
+        tag = <v:fill color2="#ffffa1 [80]" />
+      else
+        tag = <v:fill o:relid=@fill_image.Id o:title=@fill_image.name color2="#ffffe1" recolor="t" rotate="t" type="frame"/>
+      end
 str << <<SHAME_ON_YOU
 
 <v:shape id="#{@id}" type="#_x0000_t202" fillcolor="#ffffa1 [80]" o:insetmode="auto"

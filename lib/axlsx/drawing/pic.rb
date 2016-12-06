@@ -16,14 +16,22 @@ module Axlsx
     # @option options [Integer] :width
     # @option options [Integer] :height
     # @option options [Float] :opacity - set the picture opacity, accepts a value between 0.0 and 1.0
-    def initialize(anchor, options={})
-      @anchor = anchor
+    def initialize(object, options={})
+      @comment = nil
+      @anchor = nil
+      if object.kind_of? Axlsx::Comment
+        @comment = object
+        @comment.comments.worksheet.workbook.images << self
+      else
+        @anchor = object  
+        @anchor.drawing.worksheet.workbook.images << self
+      end
+        
       @hyperlink = nil
-      @anchor.drawing.worksheet.workbook.images << self
       parse_options options
       start_at(*options[:start_at]) if options[:start_at]
       yield self if block_given?
-      @picture_locking = PictureLocking.new(options)
+      @picture_locking = Axlsx::PictureLocking.new(options)
       @opacity = (options[:opacity] * 100000).round if options[:opacity]
     end
 
@@ -46,6 +54,8 @@ module Axlsx
     # The anchor for this image
     # @return [OneCellAnchor]
     attr_reader :anchor
+
+    attr_reader :comment
 
     # The picture locking attributes for this picture
     attr_reader :picture_locking
@@ -99,7 +109,11 @@ module Axlsx
     # The index of this image in the workbooks images collections
     # @return [Index]
     def index
-      @anchor.drawing.worksheet.workbook.images.index(self)
+      unless @anchor.nil?
+        @anchor.drawing.worksheet.workbook.images.index(self)
+      else
+        @comment.comments.worksheet.workbook.images.index(self)
+      end
     end
 
     # The part name for this image used in serialization and relationship building

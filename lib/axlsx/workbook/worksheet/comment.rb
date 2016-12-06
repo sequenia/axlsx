@@ -13,11 +13,15 @@ module Axlsx
     # @option [String] text The text for the comment
     # @option [String] ref The refence (e.g. 'A3' where this comment will be anchored.
     # @option [Boolean] visible This controls the visiblity of the associated vml_shape.
-    def initialize(comments, options={})
+    def initialize(comments, options={}, pic_path = "")
       raise ArgumentError, "A comment needs a parent comments object" unless comments.is_a?(Comments)
       @visible = true
       @comments = comments
       parse_options options
+      unless pic_path == ""
+        @bg_picture = Pic.new(self, {image_src: pic_path, noSelect: true, noMove: true})
+        comments.worksheet.workbook.images << bg_picture
+      end
       yield self if block_given?
     end
 
@@ -31,6 +35,8 @@ module Axlsx
     # The string based cell position reference (e.g. 'A1') that determines the positioning of this comment
     # @return [String|Cell]
     attr_reader :ref
+
+    attr_accessor :bg_picture
 
     # TODO
     # r (Rich Text Run)
@@ -84,7 +90,8 @@ module Axlsx
         vml.left_column = vml.column
         vml.right_column = vml.column + 2 
         vml.top_row = vml.row
-         vml.bottom_row = vml.row + 4
+        vml.bottom_row = vml.row + 4
+        vml.fill_image = @bg_picture
       end
     end
   end
