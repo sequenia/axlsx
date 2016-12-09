@@ -36,7 +36,7 @@ module Axlsx
     end
 
     # allowed mime types
-    ALLOWED_MIME_TYPES = %w(image/jpeg image/png image/gif)
+    ALLOWED_MIME_TYPES = %w(image/jpeg image/png image/gif image/jpg)
 
     # The name to use for this picture
     # @return [String]

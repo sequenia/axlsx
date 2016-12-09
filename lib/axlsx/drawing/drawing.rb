@@ -146,7 +146,9 @@ module Axlsx
     # @return [Relationships]
     def relationships
       r = Relationships.new
-      child_objects.each { |child| r << child.relationship }
+      child_objects.each do |child| 
+        r << child.relationship 
+      end
       r
     end
 

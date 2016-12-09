@@ -234,6 +234,7 @@ module Axlsx
         if comment.size > 0
           parts << { :entry => "xl/#{comment.pn}", :doc => comment, :schema => SML_XSD }
           parts << { :entry => "xl/#{comment.vml_drawing.pn}", :doc => comment.vml_drawing, :schema => nil }
+          parts << { :entry => "xl/#{comment.vml_drawing.rels_pn}", :doc => comment.vml_releationships, :schema => RELS_XSD}
         end
       end
 
@@ -253,6 +254,7 @@ module Axlsx
         parts << {:entry => "xl/#{sheet.rels_pn}", :doc => sheet.relationships, :schema => RELS_XSD}
         parts << {:entry => "xl/#{sheet.pn}", :doc => sheet, :schema => SML_XSD}
       end
+
       parts
     end
 
@@ -314,7 +316,11 @@ module Axlsx
         c_types << Axlsx::Override.new(:PartName => "/xl/#{sheet.pn}",
                                          :ContentType => WORKSHEET_CT)
       end
-      exts = workbook.images.map { |image| image.extname.downcase }
+      exts = workbook.images.map do |image| 
+        unless image.extname.nil?
+          image.extname.downcase 
+        end
+      end
       exts.uniq.each do |ext|
         ct = if  ['jpeg', 'jpg'].include?(ext)
                JPEG_CT

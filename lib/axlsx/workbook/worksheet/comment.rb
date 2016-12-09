@@ -17,6 +17,8 @@ module Axlsx
       raise ArgumentError, "A comment needs a parent comments object" unless comments.is_a?(Comments)
       @visible = true
       @comments = comments
+      @text = ""
+      @author = ""
       parse_options options
       unless pic_path == ""
         @bg_picture = Pic.new(self, {image_src: pic_path, noSelect: true, noMove: true})
@@ -27,6 +29,8 @@ module Axlsx
 
     string_attr_accessor :text, :author
     boolean_attr_accessor :visible
+    attr_accessor :width
+    attr_accessor :height
 
     # The owning Comments object
     # @return [Comments]
@@ -72,11 +76,16 @@ module Axlsx
       str << '<text>'
       unless author.to_s == ""
         str << '<r><rPr><b/><color indexed="81"/></rPr>'
-        str << ("<t>" << ::CGI.escapeHTML(author.to_s) << ":\n</t></r>")
+        str << ("<t>" << author.to_s<< ":\n</t></r>")
       end
       str << '<r>'
       str << '<rPr><color indexed="81"/></rPr>'
-      str << ('<t>' << ::CGI.escapeHTML(text) << '</t></r></text>')
+      unless  text.to_s == ""
+        str << ('<t>' << text << '</t>')
+      else
+        str << ('<t xml:space="preserve">' << '</t>')
+      end
+      str << '</r></text>'
       str << '</comment>'
     end
 

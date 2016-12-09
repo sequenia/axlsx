@@ -39,8 +39,6 @@ module Axlsx
     # @option options [String] text The text for this comment
     # @option options [Stirng|Cell] ref The cell that this comment is attached to.
     def add_comment(options={}, pic_path = "")
-      raise ArgumentError, "Comment require an author" unless options[:author]
-      raise ArgumentError, "Comment requires text" unless options[:text]
       raise ArgumentError, "Comment requires ref" unless options[:ref]
       self << Comment.new(self, options, pic_path)
       yield last if block_given?
@@ -60,11 +58,22 @@ module Axlsx
        Relationship.new(self, COMMENT_R, "../#{pn}")]
     end
 
+    def vml_releationships
+      r = Relationships.new
+      self.each do |child| 
+        unless child.bg_picture.nil?
+          r << child.bg_picture.relationship   
+        end
+      end
+      r
+    end
+
+
     # serialize the object
     # @param [String] str
     # @return [String]
     def to_xml_string(str="")
-      str << '<?xml version="1.0" encoding="UTF-8"?>'
+      str << '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
       str << ('<comments xmlns="' << XML_NS << '"><authors>')
       authors.each do  |author|
         str << ('<author>' << author.to_s << '</author>')

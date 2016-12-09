@@ -217,6 +217,9 @@ module Axlsx
   # vml drawing part
   VML_DRAWING_PN = "drawings/vmlDrawing%d.vml".freeze
 
+  # vml drawing rels part
+  VML_DRAWING_RELS_PN = "drawings/_rels/vmlDrawing%d.vml.rels".freeze
+
   # drawing part
   TABLE_PN = "tables/table%d.xml".freeze
 

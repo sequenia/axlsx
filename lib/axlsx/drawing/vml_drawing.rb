@@ -16,6 +16,10 @@ module Axlsx
       "#{VML_DRAWING_PN}" % (@comments.worksheet.index + 1)
     end
 
+    def rels_pn
+      "#{VML_DRAWING_RELS_PN}" % (@comments.worksheet.index + 1)
+    end
+
     # serialize the vml_drawing to xml.
     # @param [String] str
     # @return [String]
@@ -37,6 +41,23 @@ BAD_PROGRAMMER
       str << "</xml>"
 
     end
+
+    # def to_xml_string(str = '')
+    #   comments_str = @comments.collect { |comment| comment.vml_shape.to_xml_string }
+    #   string = ""
+    #   string << "<xml xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\">"
+    #   string << "<o:shapelayout v:ext=\"edit\">"
+    #   string << "<o:idmap v:ext=\"edit\" data=#{@comments.worksheet.index+1}/>"
+    #   string << "</o:shapelayout>"
+    #   string << "<v:shapetype id=\"_x0000_t202\" coordsize=\"21600,21600\" o:spt=\"202\" path=\"m0,0l0,21600,21600,21600,21600,0xe\">"
+    #   string << "<v:stroke joinstyle=\"miter\"/>"
+    #   string << "<v:path gradientshapeok=\"t\" o:connecttype=\"rect\"/>"
+    #   string << "</v:shapetype>"
+    #   string << comments_str.join('')
+    #   string << "</xml>"
+    #   str << string
+    #   str
+    # end
 
   end
 end
