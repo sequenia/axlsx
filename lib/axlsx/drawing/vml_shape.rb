@@ -45,11 +45,18 @@ module Axlsx
 
 
     def to_xml_string(str ='')
+
+      fill_string = ""
+      if @fill_image.nil?
+        fill_string = "<v:fill color2=\"#ffffa1 [80]\"/>"
+      else
+        fill_string = "<v:fill o:relid=\"#{@fill_image.relationship.Id}\" color2=\"#ffffa1\" recolor=\"t\" rotate=\"t\" type=\"frame\"/>"
+      end
 str << <<SHAME_ON_YOU
 
 <v:shape id="#{@id}" type="#_x0000_t202" fillcolor="#ffffa1 [80]" o:insetmode="auto"
   style="visibility:#{@visible ? 'visible' : 'hidden'}">
-  <v:fill color2="#ffffa1 [80]"/>
+  #{fill_string}
   <v:shadow on="t" obscured="t"/>
   <v:path o:connecttype="none"/>
   <v:textbox style='mso-fit-text-with-word-wrap:t'>
@@ -76,7 +83,7 @@ SHAME_ON_YOU
 
     #     str << "<v:shape id=\"#{@id}\" type=\"#_x0000_t202\" fillcolor=\"#ffffa1 [80]\" o:insetmode=\"auto\" style=\"#{styles.join(';')}\">"
     #     if @fill_image.nil?
-    #       str << "<v:fill color2=\"#ffffa1 [80]\"/>"  
+    #       str << ""  
     #     else
     #       str << "<v:fill o:relid=\"#{@fill_image.relationship.Id}\" color2=\"#ffffa1\" recolor=\"t\" rotate=\"t\" type=\"frame\"/>"
     #     end
