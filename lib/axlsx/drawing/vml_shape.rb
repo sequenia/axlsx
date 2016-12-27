@@ -42,68 +42,38 @@ module Axlsx
     # serialize the shape to a string
     # @param [String] str
     # @return [String]
-
-
-    def to_xml_string(str ='')
-
-      fill_string = ""
-      if @fill_image.nil?
-        fill_string = "<v:fill color2=\"#ffffa1 [80]\"/>"
-      else
-        fill_string = "<v:fill o:relid=\"#{@fill_image.relationship.Id}\" color2=\"#ffffa1\" recolor=\"t\" rotate=\"t\" type=\"frame\"/>"
-      end
-str << <<SHAME_ON_YOU
-
-<v:shape id="#{@id}" type="#_x0000_t202" fillcolor="#ffffa1 [80]" o:insetmode="auto"
-  style="visibility:#{@visible ? 'visible' : 'hidden'}">
-  #{fill_string}
-  <v:shadow on="t" obscured="t"/>
-  <v:path o:connecttype="none"/>
-  <v:textbox style='mso-fit-text-with-word-wrap:t'>
-   <div style='text-align:left'></div>
-  </v:textbox>
-
-  <x:ClientData ObjectType="Note">
-   <x:MoveWithCells/>
-   <x:SizeWithCells/>
-   <x:Anchor>#{left_column}, #{left_offset}, #{top_row}, #{top_offset}, #{right_column}, #{right_offset}, #{bottom_row}, #{bottom_offset}</x:Anchor>
-   <x:AutoFill>False</x:AutoFill>
-   <x:Row>#{row}</x:Row>
-   <x:Column>#{column}</x:Column>
-   #{@visible ? '<x:Visible/>' : ''}
-  </x:ClientData>
- </v:shape>
-SHAME_ON_YOU
-
-    end
     
-    # def to_xml_string(str ='')
-    #     styles = []
-    #     styles << "visibility:#{@visible == true ? 'visible' : 'hidden'}"
+    def to_xml_string(str ='')
+        styles = []
+        styles << "visibility:#{@visible == true ? 'visible' : 'hidden'}"
 
-    #     str << "<v:shape id=\"#{@id}\" type=\"#_x0000_t202\" fillcolor=\"#ffffa1 [80]\" o:insetmode=\"auto\" style=\"#{styles.join(';')}\">"
-    #     if @fill_image.nil?
-    #       str << ""  
-    #     else
-    #       str << "<v:fill o:relid=\"#{@fill_image.relationship.Id}\" color2=\"#ffffa1\" recolor=\"t\" rotate=\"t\" type=\"frame\"/>"
-    #     end
-    #     str << "<v:shadow on=\"t\" obscured=\"t\"/>"
-    #     str << "<v:path o:connecttype=\"none\"/>"
-    #     str << "<v:textbox style=\"mso-fit-text-with-word-wrap:t\">"
-    #     str << "<div style=\"text-align:left\"></div>"
-    #     str << "</v:textbox>"
-    #     str << "<x:ClientData ObjectType=\"Note\">"
-    #     str << "<x:MoveWithCells/>"
-    #     str << "<x:SizeWithCells/>"
-    #     str << "<x:Anchor>#{left_column}, #{left_offset}, #{top_row}, #{top_offset}, #{right_column}, #{right_offset}, #{bottom_row}, #{bottom_offset}</x:Anchor>"
-    #     str << "<x:AutoFill>False</x:AutoFill>"
-    #     str << "<x:Row>#{row}</x:Row>"
-    #     str << "<x:Column>#{column}</x:Column>"
-    #     if @visible == true
-    #       str << "<x:Visible/>"
-    #     end
-    #     str << "</x:ClientData>"
-    #     str << "</v:shape>"
-    # end
+        str << "<v:shape id=\"#{@id}\" type=\"#_x0000_t202\"" 
+        if @fill_image.nil?
+          str << "fillcolor=\"#ffffa1 [80]\""
+        end
+        str << " o:insetmode=\"auto\" style=\"#{styles.join(';')}\">"
+        if @fill_image.nil?
+          str << ""  
+        else
+          str << "<v:fill o:relid=\"#{@fill_image.relationship.Id}\" color2=\"#ffffa1\" recolor=\"t\" rotate=\"t\" type=\"frame\"/>"
+        end
+        str << "<v:shadow on=\"t\" obscured=\"t\"/>"
+        str << "<v:path o:connecttype=\"none\"/>"
+        str << "<v:textbox style=\"mso-fit-text-with-word-wrap:t\">"
+        str << "<div style=\"text-align:left\"></div>"
+        str << "</v:textbox>"
+        str << "<x:ClientData ObjectType=\"Note\">"
+        str << "<x:MoveWithCells/>"
+        str << "<x:SizeWithCells/>"
+        str << "<x:Anchor>#{left_column}, #{left_offset}, #{top_row}, #{top_offset}, #{right_column}, #{right_offset}, #{bottom_row}, #{bottom_offset}</x:Anchor>"
+        str << "<x:AutoFill>False</x:AutoFill>"
+        str << "<x:Row>#{row}</x:Row>"
+        str << "<x:Column>#{column}</x:Column>"
+        if @visible == true
+          str << "<x:Visible/>"
+        end
+        str << "</x:ClientData>"
+        str << "</v:shape>"
+    end
   end
 end

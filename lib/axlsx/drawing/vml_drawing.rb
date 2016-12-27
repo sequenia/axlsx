@@ -22,42 +22,24 @@ module Axlsx
 
     # serialize the vml_drawing to xml.
     # @param [String] str
-    # @return [String]
+    # @return [String] 
+
     def to_xml_string(str = '')
-      str << <<BAD_PROGRAMMER
-<xml xmlns:v="urn:schemas-microsoft-com:vml"
- xmlns:o="urn:schemas-microsoft-com:office:office"
- xmlns:x="urn:schemas-microsoft-com:office:excel">
- <o:shapelayout v:ext="edit">
-  <o:idmap v:ext="edit" data="#{@comments.worksheet.index+1}"/>
- </o:shapelayout>
- <v:shapetype id="_x0000_t202" coordsize="21600,21600" o:spt="202"
-  path="m0,0l0,21600,21600,21600,21600,0xe">
-  <v:stroke joinstyle="miter"/>
-  <v:path gradientshapeok="t" o:connecttype="rect"/>
- </v:shapetype>
-BAD_PROGRAMMER
-      @comments.each { |comment| comment.vml_shape.to_xml_string str }
-      str << "</xml>"
-
+      comments_str = @comments.collect { |comment| comment.vml_shape.to_xml_string }
+      string = ""
+      string << "<xml xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\">"
+      string << "<o:shapelayout v:ext=\"edit\">"
+      string << "<o:idmap v:ext=\"edit\" data=\"#{@comments.worksheet.index+1}\"/>"
+      string << "</o:shapelayout>"
+      string << "<v:shapetype id=\"_x0000_t202\" coordsize=\"21600,21600\" o:spt=\"202\" path=\"m0,0l0,21600,21600,21600,21600,0xe\">"
+      string << "<v:stroke joinstyle=\"miter\"/>"
+      string << "<v:path gradientshapeok=\"t\" o:connecttype=\"rect\"/>"
+      string << "</v:shapetype>"
+      string << comments_str.join('')
+      string << "</xml>"
+      str << string
+      str
     end
-
-    # def to_xml_string(str = '')
-    #   comments_str = @comments.collect { |comment| comment.vml_shape.to_xml_string }
-    #   string = ""
-    #   string << "<xml xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\">"
-    #   string << "<o:shapelayout v:ext=\"edit\">"
-    #   string << "<o:idmap v:ext=\"edit\" data=#{@comments.worksheet.index+1}/>"
-    #   string << "</o:shapelayout>"
-    #   string << "<v:shapetype id=\"_x0000_t202\" coordsize=\"21600,21600\" o:spt=\"202\" path=\"m0,0l0,21600,21600,21600,21600,0xe\">"
-    #   string << "<v:stroke joinstyle=\"miter\"/>"
-    #   string << "<v:path gradientshapeok=\"t\" o:connecttype=\"rect\"/>"
-    #   string << "</v:shapetype>"
-    #   string << comments_str.join('')
-    #   string << "</xml>"
-    #   str << string
-    #   str
-    # end
 
   end
 end
