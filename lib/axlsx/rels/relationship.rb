@@ -11,9 +11,11 @@ module Axlsx
         @instances ||= {
           "#{Axlsx::IMAGE_R}" => [],
           "#{Axlsx::DRAWING_R}" => [],
+          "#{Axlsx::COMMENT_R}" => [],
+          "#{Axlsx::STYLES_R}" => [],
           "OTHER" => []
         }
-        if type == Axlsx::IMAGE_R || type == Axlsx::DRAWING_R
+        if type == Axlsx::IMAGE_R || type == Axlsx::DRAWING_R || type = Axlsx::COMMENT_R || type = Axlsx::STYLES_R
           @instances[type]
         else
           @instances["OTHER"]
@@ -33,6 +35,8 @@ module Axlsx
         @instances = {
           "#{Axlsx::IMAGE_R}" => [],
           "#{Axlsx::DRAWING_R}" => [],
+          "#{Axlsx::COMMENT_R}" => [],
+          "#{Axlsx::STYLES_R}" => [],
           "OTHER" => []
         }
       end
@@ -43,7 +47,7 @@ module Axlsx
       # {clear_cached_instances} will automatically reset the generated ids, too.
       # @return [String]
       def next_free_id(type)
-        if type == Axlsx::IMAGE_R || type == Axlsx::DRAWING_R
+        if type == Axlsx::IMAGE_R || type == Axlsx::DRAWING_R || type = Axlsx::COMMENT_R || type = Axlsx::STYLES_R
           "rId#{@instances[type].size + 1}"
         else
           "rId#{@instances['OTHER'].size + 1}"
