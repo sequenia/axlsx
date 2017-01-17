@@ -3,43 +3,60 @@ module Axlsx
   # A relationship defines a reference between package parts.
   # @note Packages automatically manage relationships.
   class Relationship
-    
+
     class << self
       # Keeps track of all instances of this class.
-      # @return [Array]
-      def instances
-        @instances ||= []
+      # @return [Hash]
+      def instances(type)
+        @instances ||= {
+          "#{Axlsx::IMAGE_R}" => [],
+          "#{Axlsx::DRAWING_R}" => [],
+          "OTHER" => []
+        }
+        if type == Axlsx::IMAGE_R || type == Axlsx::DRAWING_R
+          @instances[type]
+        else
+          @instances["OTHER"]
+        end
       end
-      
+
       # Clear cached instances.
-      # 
+      #
       # This should be called before serializing a package (see {Package#serialize} and
-      # {Package#to_stream}) to make sure that serialization is idempotent (i.e. 
+      # {Package#to_stream}) to make sure that serialization is idempotent (i.e.
       # Relationship instances are generated with the same IDs everytime the package
       # is serialized).
-      # 
-      # Also, calling this avoids memory leaks (cached instances lingering around 
-      # forever). 
+      #
+      # Also, calling this avoids memory leaks (cached instances lingering around
+      # forever).
       def clear_cached_instances
-        @instances = []
+        @instances = {
+          "#{Axlsx::IMAGE_R}" => [],
+          "#{Axlsx::DRAWING_R}" => [],
+          "OTHER" => []
+        }
       end
-      
-      # Generate and return a unique id (eg. `rId123`) Used for setting {#Id}. 
+
+      # Generate and return a unique id (eg. `rId123`) Used for setting {#Id}.
       #
       # The generated id depends on the number of cached instances, so using
       # {clear_cached_instances} will automatically reset the generated ids, too.
       # @return [String]
-      def next_free_id
-        "rId#{@instances.size + 1}"
+      def next_free_id(type)
+        if type == Axlsx::IMAGE_R || type == Axlsx::DRAWING_R
+          "rId#{@instances[type].size + 1}"
+        else
+          "rId#{@instances['OTHER'].size + 1}"
+        end
       end
     end
 
-    # The id of the relationship (eg. "rId123"). Most instances get their own unique id. 
+    # The id of the relationship (eg. "rId123"). Most instances get their own unique id.
     # However, some instances need to share the same id – see {#should_use_same_id_as?}
     # for details.
     # @return [String]
     attr_reader :Id
-    
+
     # The location of the relationship target
     # @return [String]
     attr_reader :Target
@@ -69,8 +86,8 @@ module Axlsx
     # The source object the relations belongs to (e.g. a hyperlink, drawing, ...). Needed when
     # looking up the relationship for a specific object (see {Relationships#for}).
     attr_reader :source_obj
-    
-    # Initializes a new relationship. 
+
+    # Initializes a new relationship.
     # @param [Object] source_obj see {#source_obj}
     # @param [String] type The type of the relationship
     # @param [String] target The target for the relationship
@@ -80,12 +97,12 @@ module Axlsx
       self.Target=target
       self.Type=type
       self.TargetMode = options[:target_mode] if options[:target_mode]
-      @Id = if (existing = self.class.instances.find{ |i| should_use_same_id_as?(i) })
+      @Id = if (existing = self.class.instances(type).find{ |i| should_use_same_id_as?(i) })
         existing.Id
       else
-        self.class.next_free_id
+        self.class.next_free_id(type)
       end
-      self.class.instances << self
+      self.class.instances(type) << self
     end
 
     # @see Target
@@ -105,12 +122,12 @@ module Axlsx
       str << (h.map { |key, value| '' << key.to_s << '="' << Axlsx::coder.encode(value.to_s) << '"'}.join(' '))
       str << '/>'
     end
-    
+
     # Whether this relationship should use the same id as `other`.
     #
     # Instances designating the same relationship need to use the same id. We can not simply
-    # compare the {#Target} attribute, though: `foo/bar.xml`, `../foo/bar.xml`, 
-    # `../../foo/bar.xml` etc. are all different but probably mean the same file (this 
+    # compare the {#Target} attribute, though: `foo/bar.xml`, `../foo/bar.xml`,
+    # `../../foo/bar.xml` etc. are all different but probably mean the same file (this
     # is especially an issue for relationships in the context of pivot tables). So lets
     # just ignore this attribute for now (except when {#TargetMode} is set to `:External` –
     # then {#Target} will be an absolute URL and thus can safely be compared).
@@ -124,6 +141,6 @@ module Axlsx
       end
       result
     end
-    
+
   end
 end
