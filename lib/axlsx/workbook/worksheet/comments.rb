@@ -54,8 +54,8 @@ module Axlsx
     # The relationships required by this object
     # @return [Array]
     def relationships
-      [Relationship.new(self, VML_DRAWING_R, "../#{vml_drawing.pn}", {rel_scope: Axlsx::Relationship::WORKSHEET_RELATIONSHIPS}),
-       Relationship.new(self, COMMENT_R, "../#{pn}", {rel_scope: Axlsx::Relationship::WORKSHEET_RELATIONSHIPS})]
+      [Relationship.new(self, VML_DRAWING_R, "../#{vml_drawing.pn}"),
+       Relationship.new(self, COMMENT_R, "../#{pn}")]
     end
 
     def vml_releationships
