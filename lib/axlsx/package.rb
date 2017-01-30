@@ -316,9 +316,9 @@ module Axlsx
         c_types << Axlsx::Override.new(:PartName => "/xl/#{sheet.pn}",
                                          :ContentType => WORKSHEET_CT)
       end
-      exts = workbook.images.map do |image| 
+      exts = workbook.images.map do |image|
         unless image.extname.nil?
-          image.extname.downcase 
+          image.extname.downcase
         end
       end
       exts.uniq.each do |ext|
@@ -358,12 +358,11 @@ module Axlsx
     # @private
     def relationships
       rels = Axlsx::Relationships.new
-      rels << Relationship.new(self, WORKBOOK_R, WORKBOOK_PN)
-      rels << Relationship.new(self, CORE_R, CORE_PN)
-      rels << Relationship.new(self, APP_R, APP_PN)
+      rels << Relationship.new(self, WORKBOOK_R, WORKBOOK_PN, {rel_scope: Axlsx::Relationship::MAIN_RELATIONSHIPS})
+      rels << Relationship.new(self, CORE_R, CORE_PN, {rel_scope: Axlsx::Relationship::MAIN_RELATIONSHIPS})
+      rels << Relationship.new(self, APP_R, APP_PN, {rel_scope: Axlsx::Relationship::MAIN_RELATIONSHIPS})
       rels.lock
       rels
     end
   end
 end
-

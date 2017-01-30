@@ -60,9 +60,9 @@ module Axlsx
 
     def vml_releationships
       r = Relationships.new
-      self.each do |child| 
+      self.each do |child|
         unless child.bg_picture.nil?
-          r << child.bg_picture.relationship   
+          r << child.bg_picture.relationship
         end
       end
       r

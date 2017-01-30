@@ -23,10 +23,10 @@ module Axlsx
         @comment = object
         @comment.comments.worksheet.workbook.images << self
       else
-        @anchor = object  
+        @anchor = object
         @anchor.drawing.worksheet.workbook.images << self
       end
-        
+
       @hyperlink = nil
       parse_options options
       start_at(*options[:start_at]) if options[:start_at]
@@ -125,7 +125,7 @@ module Axlsx
     # The relationship object for this pic.
     # @return [Relationship]
     def relationship
-      Relationship.new(self, IMAGE_R, "../#{pn}")
+      Relationship.new(self, IMAGE_R, "../#{pn}", {rel_scope: Axlsx::Relationship::VML_DRAWING_RELATIONSHIPS})
     end
 
     # providing access to the anchor's width attribute

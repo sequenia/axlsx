@@ -4,21 +4,27 @@ module Axlsx
   # @note Packages automatically manage relationships.
   class Relationship
 
+    MAIN_RELATIONSHIPS        = "MAIN_RELATIONSHIPS"
+    WORKBOOK_RELATIONSHIPS    = "WORKBOOK_RELATIONSHIPS"
+    WORKSHEET_RELATIONSHIPS   = "WORKSHEET_RELATIONSHIPS"
+    VML_DRAWING_RELATIONSHIPS = "VML_DRAWING_RELATIONSHIPS"
+    OTHER_RELATIONSHIPS       = "OTHER_RELATIONSHIPS"
+
     class << self
       # Keeps track of all instances of this class.
       # @return [Hash]
-      def instances(type)
+      def instances(type = nil)
         @instances ||= {
-          "#{Axlsx::IMAGE_R}" => [],
-          "#{Axlsx::DRAWING_R}" => [],
-          "#{Axlsx::COMMENT_R}" => [],
-          "#{Axlsx::STYLES_R}" => [],
-          "OTHER" => []
+          MAIN_RELATIONSHIPS => [],
+          WORKBOOK_RELATIONSHIPS => [],
+          WORKSHEET_RELATIONSHIPS => [],
+          VML_DRAWING_RELATIONSHIPS => [],
+          OTHER_RELATIONSHIPS => []
         }
-        if type == Axlsx::IMAGE_R || type == Axlsx::DRAWING_R || type = Axlsx::COMMENT_R || type = Axlsx::STYLES_R
+        unless type.nil?
           @instances[type]
         else
-          @instances["OTHER"]
+          @instances[OTHER_RELATIONSHIPS]
         end
       end
 
@@ -33,11 +39,11 @@ module Axlsx
       # forever).
       def clear_cached_instances
         @instances = {
-          "#{Axlsx::IMAGE_R}" => [],
-          "#{Axlsx::DRAWING_R}" => [],
-          "#{Axlsx::COMMENT_R}" => [],
-          "#{Axlsx::STYLES_R}" => [],
-          "OTHER" => []
+          MAIN_RELATIONSHIPS => [],
+          WORKBOOK_RELATIONSHIPS => [],
+          WORKSHEET_RELATIONSHIPS => [],
+          VML_DRAWING_RELATIONSHIPS => [],
+          OTHER_RELATIONSHIPS => []
         }
       end
 
@@ -46,11 +52,12 @@ module Axlsx
       # The generated id depends on the number of cached instances, so using
       # {clear_cached_instances} will automatically reset the generated ids, too.
       # @return [String]
-      def next_free_id(type)
-        if type == Axlsx::IMAGE_R || type == Axlsx::DRAWING_R || type = Axlsx::COMMENT_R || type = Axlsx::STYLES_R
+      def next_free_id(type = nil)
+        unless type.nil?
           "rId#{@instances[type].size + 1}"
         else
-          "rId#{@instances['OTHER'].size + 1}"
+          other_size = @instances[OTHER_RELATIONSHIPS].size
+          "rId#{other_size.size + 1}"
         end
       end
     end
@@ -91,6 +98,8 @@ module Axlsx
     # looking up the relationship for a specific object (see {Relationships#for}).
     attr_reader :source_obj
 
+    attr_reader :rel_scope
+
     # Initializes a new relationship.
     # @param [Object] source_obj see {#source_obj}
     # @param [String] type The type of the relationship
@@ -101,12 +110,13 @@ module Axlsx
       self.Target=target
       self.Type=type
       self.TargetMode = options[:target_mode] if options[:target_mode]
-      @Id = if (existing = self.class.instances(type).find{ |i| should_use_same_id_as?(i) })
+      @rel_scope = options[:rel_scope].nil? ? OTHER_RELATIONSHIPS : options[:rel_scope]
+      @Id = if (existing = self.class.instances(@rel_scope).find{ |i| should_use_same_id_as?(i) })
         existing.Id
       else
-        self.class.next_free_id(type)
+        self.class.next_free_id(@rel_scope)
       end
-      self.class.instances(type) << self
+      self.class.instances(@rel_scope) << self
     end
 
     # @see Target
@@ -121,7 +131,7 @@ module Axlsx
     # @param [String] str
     # @return [String]
     def to_xml_string(str = '')
-      h = self.instance_values.reject{|k, _| k == "source_obj"}
+      h = self.instance_values.reject{|k, _| k == "source_obj" || k == "rel_scope"}
       str << '<Relationship '
       str << (h.map { |key, value| '' << key.to_s << '="' << Axlsx::coder.encode(value.to_s) << '"'}.join(' '))
       str << '/>'
