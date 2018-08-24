@@ -375,6 +375,11 @@ module Axlsx
       end
     end
 
+    def width_in_pt
+      puts "VALUE: #{@value}"
+      string_width(@value, font_size)
+    end
+
     private
 
     def styles

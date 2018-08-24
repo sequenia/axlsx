@@ -31,7 +31,7 @@ module Axlsx
       string << "<o:shapelayout v:ext=\"edit\">"
       string << "<o:idmap v:ext=\"edit\" data=\"#{@comments.worksheet.index+1}\"/>"
       string << "</o:shapelayout>"
-      string << "<v:shapetype id=\"_x0000_t202\" coordsize=\"21600,21600\" o:spt=\"202\" path=\"m0,0l0,21600,21600,21600,21600,0xe\">"
+      string << "<v:shapetype id=\"_x0000_t202\" coordsize=\"21600,21600\" o:spt=\"202\" path=\"m,l,21600r21600,l21600,xe\">"
       string << "<v:stroke joinstyle=\"miter\"/>"
       string << "<v:path gradientshapeok=\"t\" o:connecttype=\"rect\"/>"
       string << "</v:shapetype>"

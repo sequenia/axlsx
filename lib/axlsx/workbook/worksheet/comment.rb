@@ -28,8 +28,11 @@ module Axlsx
 
     string_attr_accessor :text, :author
     boolean_attr_accessor :visible
+
     attr_accessor :width
     attr_accessor :height
+    attr_accessor :width_in_columns, :height_in_rows,
+                  :left_offset, :top_offset, :right_offset, :bottom_offset
 
     # The owning Comments object
     # @return [Comments]
@@ -96,10 +99,18 @@ module Axlsx
       pos = Axlsx::name_to_indices(ref)
       @vml_shape = VmlShape.new(:row => pos[1], :column => pos[0], :visible => @visible, :fill_image => @bg_picture) do |vml|
         vml.left_column = vml.column
-        vml.right_column = vml.column + 2 
+        vml.right_column = vml.column + (self.width_in_columns || 2)
         vml.top_row = vml.row
-        vml.bottom_row = vml.row + 4
+        vml.bottom_row = vml.row + (self.height_in_rows || 4)
+
+        vml.left_offset = self.left_offset if self.left_offset.present?
+        vml.top_offset = self.top_offset if self.top_offset.present?
+        vml.right_offset = self.right_offset if self.right_offset.present?
+        vml.bottom_offset = self.bottom_offset if self.bottom_offset.present?
+
         vml.fill_image = @bg_picture
+        vml.width = self.width
+        vml.height = self.height
       end
     end
   end

@@ -44,36 +44,41 @@ module Axlsx
     # @return [String]
     
     def to_xml_string(str ='')
-        styles = []
-        styles << "visibility:#{@visible == true ? 'visible' : 'hidden'}"
+      styles = []
+      styles << "visibility:#{@visible == true ? 'visible' : 'hidden'}"
 
-        str << "<v:shape id=\"#{@id}\" type=\"#_x0000_t202\"" 
-        if @fill_image.nil?
-          str << "fillcolor=\"#ffffa1 [80]\""
-        end
-        str << " o:insetmode=\"auto\" style=\"#{styles.join(';')}\">"
-        if @fill_image.nil?
-          str << ""  
-        else
-          str << "<v:fill o:relid=\"#{@fill_image.relationship.Id}\" color2=\"#ffffa1\" recolor=\"t\" rotate=\"t\" type=\"frame\"/>"
-        end
-        str << "<v:shadow on=\"t\" obscured=\"t\"/>"
-        str << "<v:path o:connecttype=\"none\"/>"
-        str << "<v:textbox style=\"mso-fit-text-with-word-wrap:t\">"
-        str << "<div style=\"text-align:left\"></div>"
-        str << "</v:textbox>"
-        str << "<x:ClientData ObjectType=\"Note\">"
-        str << "<x:MoveWithCells/>"
-        str << "<x:SizeWithCells/>"
-        str << "<x:Anchor>#{left_column}, #{left_offset}, #{top_row}, #{top_offset}, #{right_column}, #{right_offset}, #{bottom_row}, #{bottom_offset}</x:Anchor>"
-        str << "<x:AutoFill>False</x:AutoFill>"
-        str << "<x:Row>#{row}</x:Row>"
-        str << "<x:Column>#{column}</x:Column>"
-        if @visible == true
-          str << "<x:Visible/>"
-        end
-        str << "</x:ClientData>"
-        str << "</v:shape>"
+      if self.width.present? && self.height.present?
+        styles << "width:#{self.width}pt"
+        styles << "height:#{self.height}pt"
+      end
+
+      str << "<v:shape id=\"#{@id}\" type=\"#_x0000_t202\""
+      if @fill_image.nil?
+        str << "fillcolor=\"#ffffa1 [80]\""
+      end
+      str << " o:insetmode=\"auto\" style=\"#{styles.join(';')}\">"
+      if @fill_image.nil?
+        str << ""
+      else
+        str << "<v:fill o:relid=\"#{@fill_image.relationship.Id}\" color2=\"#ffffa1\" recolor=\"t\" rotate=\"t\" type=\"frame\"/>"
+      end
+      str << "<v:shadow on=\"t\" obscured=\"t\"/>"
+      str << "<v:path o:connecttype=\"none\"/>"
+      str << "<v:textbox style=\"mso-fit-text-with-word-wrap:t\">"
+      str << "<div style=\"text-align:left\"></div>"
+      str << "</v:textbox>"
+      str << "<x:ClientData ObjectType=\"Note\">"
+      str << "<x:MoveWithCells/>"
+      str << "<x:SizeWithCells/>"
+      str << "<x:Anchor>#{left_column}, #{left_offset}, #{top_row}, #{top_offset}, #{right_column}, #{right_offset}, #{bottom_row}, #{bottom_offset}</x:Anchor>"
+      str << "<x:AutoFill>False</x:AutoFill>"
+      str << "<x:Row>#{row}</x:Row>"
+      str << "<x:Column>#{column}</x:Column>"
+      if @visible == true
+        str << "<x:Visible/>"
+      end
+      str << "</x:ClientData>"
+      str << "</v:shape>"
     end
   end
 end
