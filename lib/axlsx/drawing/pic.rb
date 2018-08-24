@@ -125,7 +125,13 @@ module Axlsx
     # The relationship object for this pic.
     # @return [Relationship]
     def relationship
-      Relationship.new(self, IMAGE_R, "../#{pn}", {rel_scope: Axlsx::Relationship::VML_DRAWING_RELATIONSHIPS})
+      rel_scope = if @comment.nil?
+        Axlsx::Relationship::PICTURES_RELATIONSHIPS
+      else
+        Axlsx::Relationship::VML_DRAWING_RELATIONSHIPS
+      end
+
+      Relationship.new(self, IMAGE_R, "../#{pn}", {rel_scope: rel_scope})
     end
 
     # providing access to the anchor's width attribute

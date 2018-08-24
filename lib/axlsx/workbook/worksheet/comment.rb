@@ -22,7 +22,6 @@ module Axlsx
       parse_options options
       unless pic_path == ""
         @bg_picture = Pic.new(self, {image_src: pic_path, noSelect: true, noMove: true})
-        comments.worksheet.workbook.images << bg_picture
       end
       yield self if block_given?
     end
